@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Find a Book</h2>
+
+<form action="action_page.php">
+  Title:<br>
+  <input type="text" name="title" value="Title of Book">
+  <br>
+  Author:<br>
+  <input type="text" name="author" value="Author of Book">
+  <br><br>
+  <button type="button" onclick="findBook(title.value, author.value)">Find Book</button>
+</form>
+
+<p id="demo"></p>
+
+<script>
+function findBook(title, author) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+      document.getElementById("demo").innerHTML = xhttp.responseText;
+    }
+  }
+  xhttp.open("GET", "http://localhost:8023/Plugin1/book1/" + author + "/" + title, true);
+  xhttp.send();
+}
+</script>
+
+</body>
+</html>
