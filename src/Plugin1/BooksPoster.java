@@ -3,9 +3,14 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.json.JsonHierarchicalStreamDriver;
@@ -33,31 +38,51 @@ public class BooksPoster extends IServlet {
 
 			String booksUrlString = "books.json";
 			File booksFile = new File(booksUrlString);
+			
+			// Create a new book
 			Book newBook = new Book(title, author);
-
-			XStream xstream = new XStream(new JsonHierarchicalStreamDriver() {
-				public HierarchicalStreamWriter createWriter(Writer writer) {
-					return new JsonWriter(writer, JsonWriter.DROP_ROOT_MODE);
-				}
-			});
-			xstream.setMode(XStream.NO_REFERENCES);
-			xstream.alias("book", Book.class);
-
-			String newBookJson = xstream.toXML(newBook);
-
+			
 			StringBuilder sb = new StringBuilder();
-			Scanner sc = new Scanner(booksFile);
+			File books = new File(booksUrlString);
+			Scanner sc = new Scanner(books);
 
 			while (sc.hasNext()) {
 				sb.append(sc.nextLine());
 			}
 
-			sb.insert(sb.length() - 1, ", " + newBookJson);
-
-			System.out.println("sb: " + sb.toString());
+			// Add this new book to the list of existing books
+			Gson gson = new Gson();
+			Book[] booksArray = gson.fromJson(sb.toString(), Book[].class);
+			List<Book> booksList = new ArrayList<Book>(Arrays.asList(booksArray));
+			booksList.add(newBook);
+			
+			// Serialize new list
+			Gson gsonBuilder = new GsonBuilder().setPrettyPrinting().create();
+			String arrayListToJson = gson.toJson(booksList);
+			
+//			XStream xstream = new XStream(new JsonHierarchicalStreamDriver() {
+//				public HierarchicalStreamWriter createWriter(Writer writer) {
+//					return new JsonWriter(writer, JsonWriter.DROP_ROOT_MODE);
+//				}
+//			});
+//			xstream.setMode(XStream.NO_REFERENCES);
+//			xstream.alias("book", Book.class);
+//
+//			String newBookJson = xstream.toXML(newBook);
+//
+//			StringBuilder sb = new StringBuilder();
+//			Scanner sc = new Scanner(booksFile);
+//
+//			while (sc.hasNext()) {
+//				sb.append(sc.nextLine());
+//			}
+//
+//			sb.insert(sb.length() - 1, ", " + newBookJson);
+//
+//			System.out.println("sb: " + sb.toString());
 
 			BufferedWriter bw = new BufferedWriter(new FileWriter(booksFile));
-			bw.write(sb.toString());
+			bw.write(arrayListToJson);
 			bw.flush();
 			bw.close();
 

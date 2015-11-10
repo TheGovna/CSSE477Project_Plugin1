@@ -25,9 +25,9 @@ public class Book1Getter extends IServlet {
 	public HttpResponse processRequest(HttpRequest request,
 			HttpResponse response) {
 		try {
-			// String[] uri = request.getUri().split("/");
-			// String author = uri[3];
-			// String title = uri[4];
+			 String[] uri = request.getUri().split("/");
+			 String author = uri[3];
+			 String title = uri[4];
 
 			// Look through books.json
 			String booksUrlString = "books.json";
