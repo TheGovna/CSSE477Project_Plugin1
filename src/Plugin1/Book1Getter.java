@@ -12,6 +12,7 @@ import protocol.HttpResponse;
 import protocol.HttpResponseFactory;
 import protocol.Protocol;
 
+import com.google.gson.Gson;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 
@@ -38,16 +39,9 @@ public class Book1Getter extends IServlet {
 				sb.append(sc.nextLine());
 			}
 
-//			XStream xstream = new XStream(new JettisonMappedXmlDriver());
-			XStream xstream = new XStream();
-
-			xstream.alias("books", Books.class);
-			xstream.alias("book", Book.class);
-			xstream.addImplicitCollection(Books.class, "books");
-			Books booksList = (Books) xstream.fromXML(sb.toString());
-			List<Book> allBooksList = booksList.getBooks();
-
-			System.out.println("allBooksList: " + allBooksList.size());
+			Gson gson = new Gson();
+			Book[] booksArray = gson.fromJson(sb.toString(), Book[].class);
+			System.out.println("booksArray: " + booksArray.length);
 
 			File file = new File("file");
 

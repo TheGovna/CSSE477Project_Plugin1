@@ -41,7 +41,7 @@ public class BooksPutter extends IServlet {
 			//System.out.println("Working Directory = " + System.getProperty("user.dir"));
 			//System.out.println("booksUrl: " + url);
 			//File books = new File(new URI(url.toString()));
-			File books = new File(booksUrlString);
+			File booksFile = new File(booksUrlString);
 
 			Book newBook = new Book(title, author);
 			
@@ -56,24 +56,22 @@ public class BooksPutter extends IServlet {
 	        String newBookJson = xstream.toXML(newBook);
 	        
 	        StringBuilder sb = new StringBuilder();
-	        Scanner sc = new Scanner(books);
+	        Scanner sc = new Scanner(booksFile);
 	        
 	        while (sc.hasNext()) {
 	        	sb.append(sc.nextLine());
 	        }
 	        
-	        sb.insert(sb.length() - 2, ", " + newBookJson);
+	        sb.insert(sb.length() - 1, ", " + newBookJson);
 	        
 	        System.out.println("sb: " + sb.toString());
 			
-//			File file = new File("file");
-
-			BufferedWriter bw = new BufferedWriter(new FileWriter(books));
+			BufferedWriter bw = new BufferedWriter(new FileWriter(booksFile));
 			bw.write(sb.toString());
 			bw.flush();
 			bw.close();
 			
-			response = HttpResponseFactory.createRequestWithFile(books,
+			response = HttpResponseFactory.createRequestWithFile(booksFile,
 					Protocol.CLOSE);		
 		} catch (Exception e) {
 			e.printStackTrace();
