@@ -32,14 +32,14 @@ public class BooksGetter extends IServlet {
 				sb.append(sc.nextLine());
 			}
 
-			Gson gson = new Gson();
-			Book[] booksArray = gson.fromJson(sb.toString(), Book[].class);
-			System.out.println("booksArray: " + booksArray.length);
+//			Gson gson = new Gson();
+//			Book[] booksArray = gson.fromJson(sb.toString(), Book[].class);
+//			System.out.println("booksArray: " + booksArray.length);
 
 			File file = new File("file");
 
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-			bw.write("I am book 1 getter");
+			bw.write(sb.toString()); // Do we want to pretty print this?
 			bw.flush();
 			bw.close();
 
