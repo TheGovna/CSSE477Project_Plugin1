@@ -2,8 +2,10 @@ package Plugin1;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.Writer;
 import java.net.URI;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -14,7 +16,10 @@ import protocol.HttpResponseFactory;
 import protocol.Protocol;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
+import com.thoughtworks.xstream.io.json.JsonHierarchicalStreamDriver;
+import com.thoughtworks.xstream.io.json.JsonWriter;
 
 public class BooksPutter extends IServlet {
 
@@ -23,19 +28,29 @@ public class BooksPutter extends IServlet {
 
 	@Override
 	public HttpResponse processRequest(HttpRequest request, HttpResponse response) {
-		try {
+		try {		
 			String[] uri = request.getUri().split("/");
+			
+			//System.out.println("uri: " + Arrays.toString(uri));
+			
 			String author = uri[3];
 			String title = uri[4];
 			
-			String booksUrlString = "json.txt";
-			URL url = this.getClass().getResource(booksUrlString);
-			System.out.println(url);
-			File books = new File(new URI(url.toString()));
-			Book newBook = new Book(author, title);
+			String booksUrlString = "books.json";
+			//URL url = this.getClass().getResource(booksUrlString);
+			//System.out.println("Working Directory = " + System.getProperty("user.dir"));
+			//System.out.println("booksUrl: " + url);
+			//File books = new File(new URI(url.toString()));
+			File books = new File(booksUrlString);
+
+			Book newBook = new Book(title, author);
 			
-			XStream xstream = new XStream();
-	        //xstream.setMode(XStream.NO_REFERENCES);
+			XStream xstream = new XStream(new JsonHierarchicalStreamDriver() {
+				public HierarchicalStreamWriter createWriter(Writer writer) {
+		            return new JsonWriter(writer, JsonWriter.DROP_ROOT_MODE);
+		         }
+			});
+	        xstream.setMode(XStream.NO_REFERENCES);
 	        xstream.alias("book", Book.class);
 
 	        String newBookJson = xstream.toXML(newBook);
@@ -48,9 +63,11 @@ public class BooksPutter extends IServlet {
 	        }
 	        
 	        sb.insert(sb.length() - 2, ", " + newBookJson);
+	        
+	        System.out.println("sb: " + sb.toString());
 			
 //			File file = new File("file");
-//
+
 			BufferedWriter bw = new BufferedWriter(new FileWriter(books));
 			bw.write(sb.toString());
 			bw.flush();
