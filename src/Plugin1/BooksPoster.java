@@ -58,7 +58,7 @@ public class BooksPoster extends IServlet {
 			
 			// Serialize new list
 			Gson gsonBuilder = new GsonBuilder().setPrettyPrinting().create();
-			String arrayListToJson = gson.toJson(booksList);
+			String arrayListToJson = gsonBuilder.toJson(booksList);
 
 			BufferedWriter bw = new BufferedWriter(new FileWriter(booksFile));
 			bw.write(arrayListToJson);
