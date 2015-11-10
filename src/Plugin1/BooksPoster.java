@@ -59,27 +59,6 @@ public class BooksPoster extends IServlet {
 			// Serialize new list
 			Gson gsonBuilder = new GsonBuilder().setPrettyPrinting().create();
 			String arrayListToJson = gson.toJson(booksList);
-			
-//			XStream xstream = new XStream(new JsonHierarchicalStreamDriver() {
-//				public HierarchicalStreamWriter createWriter(Writer writer) {
-//					return new JsonWriter(writer, JsonWriter.DROP_ROOT_MODE);
-//				}
-//			});
-//			xstream.setMode(XStream.NO_REFERENCES);
-//			xstream.alias("book", Book.class);
-//
-//			String newBookJson = xstream.toXML(newBook);
-//
-//			StringBuilder sb = new StringBuilder();
-//			Scanner sc = new Scanner(booksFile);
-//
-//			while (sc.hasNext()) {
-//				sb.append(sc.nextLine());
-//			}
-//
-//			sb.insert(sb.length() - 1, ", " + newBookJson);
-//
-//			System.out.println("sb: " + sb.toString());
 
 			BufferedWriter bw = new BufferedWriter(new FileWriter(booksFile));
 			bw.write(arrayListToJson);
