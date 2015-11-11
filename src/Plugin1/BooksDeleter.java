@@ -45,25 +45,37 @@ public class BooksDeleter extends IServlet {
 			Gson gson = new Gson();
 			Book[] booksArray = gson.fromJson(sb.toString(), Book[].class);
 			List<Book> booksList = new ArrayList<Book>(Arrays.asList(booksArray));
+			boolean removedBook = false;
 			
 			for (Book b : booksList) {
 				if (b.getAuthor().equals(author) && b.getTitle().equals(title)) {
+					removedBook = true;
 					booksList.remove(b);
-					break;
+					
+					// Serialize new list
+					Gson gsonBuilder = new GsonBuilder().setPrettyPrinting().create();
+					String arrayListToJson = gsonBuilder.toJson(booksList);
+					
+					BufferedWriter bw = new BufferedWriter(new FileWriter(booksFile));
+					bw.write(arrayListToJson);
+					bw.flush();
+					bw.close();
+					
+					File f = new File("file");
+					BufferedWriter bw2 = new BufferedWriter(new FileWriter(f));
+					String toWrite = "The book with the following information was deleted:\nTitle: " + b.getTitle() + "\nAuthor: " + b.getAuthor();
+					bw2.write(toWrite.toCharArray());
+					bw2.flush();
+					bw2.close();
+					
+					response = HttpResponseFactory.createRequestWithFile(f,
+							Protocol.CLOSE);
 				}
 			}
 			
-			// Serialize new list
-			Gson gsonBuilder = new GsonBuilder().setPrettyPrinting().create();
-			String arrayListToJson = gsonBuilder.toJson(booksList);
-			
-			BufferedWriter bw = new BufferedWriter(new FileWriter(booksFile));
-			bw.write(arrayListToJson);
-			bw.flush();
-			bw.close();
-			
-			response = HttpResponseFactory.createRequestWithFile(booksFile,
-					Protocol.CLOSE);		
+			if (!removedBook) {
+				response = HttpResponseFactory.createRequest(Protocol.NOT_FOUND_CODE + "", Protocol.CLOSE);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

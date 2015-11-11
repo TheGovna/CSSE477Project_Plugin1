@@ -57,8 +57,14 @@ public class BooksPoster extends IServlet {
 			bw.write(arrayListToJson);
 			bw.flush();
 			bw.close();
+			
+			File file = new File("file");
+			BufferedWriter bw2 = new BufferedWriter(new FileWriter(file));
+			bw2.write("The book was created sucessfully!");
+			bw2.flush();
+			bw2.close();
 
-			response = HttpResponseFactory.createRequestWithFile(booksFile,
+			response = HttpResponseFactory.createRequestWithFile(file,
 					Protocol.CLOSE);		
 		} catch (Exception e) {
 			e.printStackTrace();

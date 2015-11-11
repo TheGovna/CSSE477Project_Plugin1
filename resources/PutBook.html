@@ -2,7 +2,7 @@
 <html>
 <body>
 
-<h2>Find a Book</h2>
+<h2>Modify a Book</h2>
 
   Title:<br>
   <input type="text" name="tertle" value="SomeTitle">
@@ -10,19 +10,19 @@
   Author:<br>
   <input type="text" name="author" value="SomeAuthor">
   <br><br>
-  <button type="button" onclick="findBook(tertle.value, author.value)">Find Book</button>
+  <button type="button" onclick="modifyBook(tertle.value, author.value)">Modify Book</button>
 
 <p id="demo"></p>
 
 <script>
-function findBook(tertle, author) {
+function modifyBook(tertle, author) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (xhttp.readyState == 4 && xhttp.status == 200) {
       document.getElementById("demo").innerHTML = xhttp.responseText;
     }
   }
-  xhttp.open("GET", "http://localhost:8023/Plugin1/book/" + author + "/" + tertle, true);
+  xhttp.open("PUT", "http://localhost:8023/Plugin1/book/" + author + "/" + tertle, true);
   xhttp.send();
 }
 </script>

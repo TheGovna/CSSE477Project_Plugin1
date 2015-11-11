@@ -2,10 +2,13 @@ package Plugin1;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import plugins.IServlet;
 import protocol.HttpRequest;
@@ -22,7 +25,6 @@ public class BooksGetter extends IServlet {
 	@Override
 	public HttpResponse processRequest(HttpRequest request, HttpResponse response) {
 		try {
-			// Look through books.json
 			String booksUrlString = "books.json";
 			StringBuilder sb = new StringBuilder();
 			File books = new File(booksUrlString);
@@ -32,14 +34,20 @@ public class BooksGetter extends IServlet {
 				sb.append(sc.nextLine());
 			}
 
-//			Gson gson = new Gson();
-//			Book[] booksArray = gson.fromJson(sb.toString(), Book[].class);
-//			System.out.println("booksArray: " + booksArray.length);
+			Gson gson = new Gson();
+			Book[] booksArray = gson.fromJson(sb.toString(), Book[].class);
+			List<Book> booksList = new ArrayList<Book>(Arrays.asList(booksArray));
+			String toWrite = "";
+			for(Book b: booksList){
+				toWrite = toWrite + "\nBook:\nAuthor: " + b.getAuthor() + "\nTitle: " + b.getTitle() + "\n";
+			}
+//			Gson gsonBuilder = new GsonBuilder().setPrettyPrinting().create();
+//			String arrayListToJson = gsonBuilder.toJson(booksList);
 
 			File file = new File("file");
 
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-			bw.write(sb.toString()); // Do we want to pretty print this?
+			bw.write(toWrite);
 			bw.flush();
 			bw.close();
 

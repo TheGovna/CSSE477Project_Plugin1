@@ -32,7 +32,6 @@ public class Book1Getter extends IServlet {
 			String title = uri[4];
 			
 			String booksUrlString = "books.json";
-			File booksFile = new File(booksUrlString);
 			
 			StringBuilder sb = new StringBuilder();
 			File books = new File(booksUrlString);
@@ -51,12 +50,12 @@ public class Book1Getter extends IServlet {
 			for (Book b : booksList) {
 				if (b.getAuthor().equals(author) && b.getTitle().equals(title)) {
 					book = b;
-					Gson gsonBuilder = new GsonBuilder().setPrettyPrinting().create();
-					String bookToJson = gsonBuilder.toJson(book);
+//					Gson gsonBuilder = new GsonBuilder().setPrettyPrinting().create();
+//					String bookToJson = gsonBuilder.toJson(book);
 					
 					File file = new File("file");
 					BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-					bw.write(bookToJson);
+					bw.write("Author: " + book.getAuthor() + "\nTitle: " + book.getTitle());
 					bw.flush();
 					bw.close();
 					
@@ -67,7 +66,6 @@ public class Book1Getter extends IServlet {
 			}
 
 			if (book == null) {
-				// I think this is what we need to do
 				response = HttpResponseFactory.createRequest(Protocol.NOT_FOUND_CODE + "", Protocol.CLOSE);
 			}
 	

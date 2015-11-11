@@ -43,6 +43,7 @@ public class BooksPutter extends IServlet {
 				sb.append(sc.nextLine());
 			}
 			
+			String toWrite="";
 			// Add this new book to the list of existing books if not already there
 			Gson gson = new Gson();
 			Book[] booksArray = gson.fromJson(sb.toString(), Book[].class);
@@ -54,13 +55,15 @@ public class BooksPutter extends IServlet {
 					b.setAuthor(newBook.getAuthor());
 					b.setTitle(newBook.getTitle());
 					modifiedList = true;
-					
+					toWrite = "Book was modified successfully!";
 					break;
 				}
 			}
 			
-			if (!modifiedList)
+			if (!modifiedList){
 				booksList.add(newBook);
+				toWrite = "We couldn't find the referenced book, so we went ahead and created it to your specifications.";
+			}
 			
 			// Serialize new list
 			Gson gsonBuilder = new GsonBuilder().setPrettyPrinting().create();
@@ -71,7 +74,13 @@ public class BooksPutter extends IServlet {
 			bw.flush();
 			bw.close();
 			
-			response = HttpResponseFactory.createRequestWithFile(booksFile,
+			File f = new File("file");
+			bw = new BufferedWriter(new FileWriter(f));
+			bw.write(toWrite);
+			bw.flush();
+			bw.close();
+			
+			response = HttpResponseFactory.createRequestWithFile(f,
 					Protocol.CLOSE);		
 		} catch (Exception e) {
 			e.printStackTrace();

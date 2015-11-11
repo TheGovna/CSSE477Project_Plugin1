@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<body onload = "findBooks();">
+
+<h2>All The Books</h2>
+
+<p id="demo"></p>
+
+
+<script>
+function findBooks() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4) {
+      document.getElementById("demo").innerHTML = xhttp.responseText;
+    }
+  }
+  xhttp.open("GET", "http://localhost:8023/Plugin1/books", true);
+  xhttp.send();
+}
+</script>
+
+</body>
+</html>
