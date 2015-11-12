@@ -48,6 +48,7 @@ public class BooksPutter extends IServlet {
 			Gson gson = new Gson();
 			Book[] booksArray = gson.fromJson(sb.toString(), Book[].class);
 			List<Book> booksList = new ArrayList<Book>(Arrays.asList(booksArray));
+			String method = "";
 			
 			boolean modifiedList = false;
 			for (Book b : booksList) {
@@ -56,6 +57,7 @@ public class BooksPutter extends IServlet {
 					b.setTitle(newBook.getTitle());
 					modifiedList = true;
 					toWrite = "Book was modified successfully!";
+					method = Protocol.PUT;
 					break;
 				}
 			}
@@ -63,6 +65,7 @@ public class BooksPutter extends IServlet {
 			if (!modifiedList){
 				booksList.add(newBook);
 				toWrite = "We couldn't find the referenced book, so we went ahead and created it to your specifications.";
+				method = Protocol.POST;
 			}
 			
 			// Serialize new list
@@ -81,7 +84,7 @@ public class BooksPutter extends IServlet {
 			bw.close();
 			
 			response = HttpResponseFactory.createRequestWithFile(f,
-					Protocol.CLOSE);		
+					Protocol.CLOSE, method);		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

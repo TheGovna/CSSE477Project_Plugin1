@@ -39,7 +39,7 @@ public class BooksGetter extends IServlet {
 			List<Book> booksList = new ArrayList<Book>(Arrays.asList(booksArray));
 			String toWrite = "";
 			for(Book b: booksList){
-				toWrite = toWrite + "\nBook:\nAuthor: " + b.getAuthor() + "\nTitle: " + b.getTitle() + "\n";
+				toWrite = toWrite + "<br />Book:<br />Author: " + b.getAuthor() + "<br />Title: " + b.getTitle() + "<br />";
 			}
 //			Gson gsonBuilder = new GsonBuilder().setPrettyPrinting().create();
 //			String arrayListToJson = gsonBuilder.toJson(booksList);
@@ -52,7 +52,7 @@ public class BooksGetter extends IServlet {
 			bw.close();
 
 			response = HttpResponseFactory.createRequestWithFile(file,
-					Protocol.CLOSE);
+					Protocol.CLOSE, Protocol.GET);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

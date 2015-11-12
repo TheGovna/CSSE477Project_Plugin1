@@ -65,7 +65,7 @@ public class BooksPoster extends IServlet {
 			bw2.close();
 
 			response = HttpResponseFactory.createRequestWithFile(file,
-					Protocol.CLOSE);		
+					Protocol.CLOSE, Protocol.POST);		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

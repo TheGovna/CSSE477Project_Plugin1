@@ -55,12 +55,12 @@ public class Book1Getter extends IServlet {
 					
 					File file = new File("file");
 					BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-					bw.write("Author: " + book.getAuthor() + "\nTitle: " + book.getTitle());
+					bw.write("Author: " + book.getAuthor() + "<br />Title: " + book.getTitle());
 					bw.flush();
 					bw.close();
 					
 					response = HttpResponseFactory.createRequestWithFile(file,
-							Protocol.CLOSE);
+							Protocol.CLOSE, Protocol.GET);
 					break;
 				}
 			}

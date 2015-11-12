@@ -47,7 +47,10 @@ public class BooksDeleter extends IServlet {
 			List<Book> booksList = new ArrayList<Book>(Arrays.asList(booksArray));
 			boolean removedBook = false;
 			
-			for (Book b : booksList) {
+			Book b;
+			
+			for (int i = 0; i < booksList.size(); i++) {
+				b = booksList.get(i);
 				if (b.getAuthor().equals(author) && b.getTitle().equals(title)) {
 					removedBook = true;
 					booksList.remove(b);
@@ -63,13 +66,13 @@ public class BooksDeleter extends IServlet {
 					
 					File f = new File("file");
 					BufferedWriter bw2 = new BufferedWriter(new FileWriter(f));
-					String toWrite = "The book with the following information was deleted:\nTitle: " + b.getTitle() + "\nAuthor: " + b.getAuthor();
-					bw2.write(toWrite.toCharArray());
+					String toWrite = "The book with the following information was deleted:<br />Title: " + b.getTitle() + "<br />Author: " + b.getAuthor();
+					bw2.write(toWrite);
 					bw2.flush();
 					bw2.close();
 					
 					response = HttpResponseFactory.createRequestWithFile(f,
-							Protocol.CLOSE);
+							Protocol.CLOSE, Protocol.DELETE);
 				}
 			}
 			
